@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Web Kelas IX-D Final</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif;}
+body{background:#0f172a;color:#fff;overflow:hidden;position:relative;height:100vh;font-size:14px;transition:0.5s;}
+/* Sidebar */
+.sidebar{
+  position:fixed;top:0;left:0;width:250px;height:100%;background:#1e293b;padding:15px;
+  transform:translateX(-100%);transition:0.4s;z-index:1000;border-top-right-radius:15px;border-bottom-right-radius:15px;
+}
+.sidebar.active{transform:translateX(0);}
+.sidebar-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;}
+.sidebar-header .close-sidebar{cursor:pointer;font-size:22px;color:#ef4444;}
+.sidebar ul{list-style:none;display:flex;flex-direction:column;gap:12px;}
+.sidebar ul li a{color:#fff;text-decoration:none;padding:8px 10px;border-radius:8px;display:block;background:rgba(255,255,255,0.05);}
+.sidebar ul li a:hover{background:#22d3ee;color:#000;}
+
+/* Overlay */
+.overlay{
+  position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:none;z-index:900;
+}
+.overlay.active{display:block;}
+
+/* Dashboard */
+.dashboard{padding:15px;text-align:center;margin-left:0;}
+.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:15px;}
+.card{
+  background:#1e293b;padding:15px;border-radius:15px;text-align:center;
+  box-shadow:0 0 10px rgba(34,211,238,0.7);transition:0.3s;cursor:pointer;
+}
+.card:active{box-shadow:0 0 20px #22d3ee,0 0 30px #facc15,0 0 40px #a855f7;}
+
+/* Planet Saturnus */
+.planet{
+  width:80px;height:80px;border-radius:50%;
+  background:radial-gradient(circle at 30% 30%,#facc15,#eab308);margin:12px auto;
+  position:relative;animation:spin 8s linear infinite;
+}
+.planet::after{
+  content:"";position:absolute;top:50%;left:-20px;width:120px;height:10px;border:2px solid rgba(255,255,255,0.7);
+  border-radius:50%;transform:translateY(-50%) rotate(20deg);
+}
+@keyframes spin{0%{transform:rotate(0);}100%{transform:rotate(360deg);}}
+
+/* Popup */
+.popup{
+  position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+  background:#111827;padding:15px;border-radius:15px;
+  width:90%;max-width:350px;max-height:70vh;overflow-y:auto;z-index:1100;display:none;
+  box-shadow:0 0 20px #22d3ee,0 0 30px #facc15,0 0 40px #a855f7;
+}
+.popup.active{display:block;}
+.popup .close-btn{float:right;cursor:pointer;color:#ef4444;font-size:20px;}
+.popup ul{list-style:none;margin-top:10px;padding-left:0;}
+
+/* Gelembung */
+.bubble{
+  position:absolute;bottom:0;width:20px;height:20px;background:rgba(34,211,238,0.7);border-radius:50%;
+  animation:rise 6s linear infinite;cursor:pointer;
+}
+@keyframes rise{0%{transform:translateY(0);}100%{transform:translateY(-100vh);}}
+
+/* Welcome */
+h1{font-size:18px;background:linear-gradient(90deg,#22d3ee,#facc15,#a855f7);-webkit-background-clip:text;color:transparent;margin:10px 0;}
+
+/* Scroll popup */
+.popup::-webkit-scrollbar{width:6px;}
+.popup::-webkit-scrollbar-thumb{background:#22d3ee;border-radius:3px;}
+.popup::-webkit-scrollbar-track{background:#111827;}
+</style>
+</head>
+<body>
+
+<div class="menu-btn" style="position:absolute;top:10px;left:10px;font-size:24px;cursor:pointer;">&#9776;</div>
+
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <span>Menu</span>
+    <span class="close-sidebar" onclick="closeSidebar()">❌</span>
+  </div>
+  <ul>
+    <li><a onclick="openPopup('siswa')">Data Siswa</a></li>
+    <li><a onclick="openPopup('jadwal')">Jadwal Pelajaran</a></li>
+    <li><a onclick="openPopup('piket')">Piket Kelas</a></li>
+    <li><a onclick="openPopup('struktur')">Struktur Kelas</a></li>
+    <li><a onclick="openServer()">Server</a></li>
+    <li><a onclick="openEditor()">Edit Konten</a></li>
+    <li><a onclick="logout()">Logout</a></li>
+  </ul>
+</div>
+
+<div class="overlay" id="overlay" onclick="closeAll()"></div>
+
+<div class="dashboard">
+  <div class="planet"></div>
+  <h1>Selamat Datang di Web Kelas IX-D</h1>
+  <div class="cards">
+    <div class="card">👥 Total Siswa</div>
+    <div class="card">📚 Mata Pelajaran</div>
+    <div class="card">🔔 Piket Kelas</div>
+    <div class="card">📅 Hari Ini</div>
+  </div>
+</div>
+
+<!-- Popups -->
+<div id="popup-siswa" class="popup"><span class="close-btn" onclick="closePopup('siswa')">&times;</span><h2>Data Siswa</h2><ul id="list-siswa"></ul></div>
+<div id="popup-jadwal" class="popup"><span class="close-btn" onclick="closePopup('jadwal')">&times;</span><h2>Jadwal</h2><ul id="list-jadwal"></ul></div>
+<div id="popup-piket" class="popup"><span class="close-btn" onclick="closePopup('piket')">&times;</span><h2>Piket</h2><ul id="list-piket"></ul></div>
+<div id="popup-struktur" class="popup"><span class="close-btn" onclick="closePopup('struktur')">&times;</span><h2>Struktur Kelas</h2><ul id="list-struktur"></ul></div>
+
+<!-- Server -->
+<div id="popup-server" class="popup">
+  <span class="close-btn" onclick="closePopup('server')">&times;</span>
+  <h2>Server Control</h2>
+  <p>Masukkan email & password admin untuk ON/OFF server</p>
+  <input type="text" id="serverEmail" placeholder="Email">
+  <input type="password" id="serverPass" placeholder="Password">
+  <button onclick="toggleServer()">ON/OFF</button>
+  <p id="serverStatus"></p>
+</div>
+
+<!-- Editor -->
+<div id="editorPopup" class="popup">
+  <span class="close-btn" onclick="closeEditor()">&times;</span>
+  <h2>Edit Konten Admin</h2>
+  <textarea id="editorArea"></textarea>
+  <button onclick="saveEditor()">Simpan</button>
+</div>
+
+<script>
+// Sidebar toggle
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('overlay');
+const editorPopup=document.getElementById('editorPopup');
+document.querySelector('.menu-btn').addEventListener('click',()=>{
+  sidebar.classList.add('active');overlay.classList.add('active');
+});
+function closeSidebar(){sidebar.classList.remove('active');overlay.classList.remove('active');}
+function closeAll(){closeSidebar();document.querySelectorAll('.popup').forEach(p=>p.classList.remove('active'));}
+
+// Data
+let data={
+  siswa:["Afifah F","Ahmad Bukhori","Ahmad Hanan M","Amara Putri A","Amira Putri A","Angga Wijayanto","Avida A","Bayu Kurniawan","Bety Nur Cahyani","Cherry A","Fahri Zaidan A","Fauzan Cahyo G","Geby Cinta H","Hibatullah R","Hijri Aza M","Impron Atma W","Irsyad Ali M","Itmamul Wafa","Jinaan M","Lintar K","M Faiz F","M Raka A","M Ulil F","Novinza Risky S","Nusaibah A","Raka Restu S","Senja Alya A","Uswatun K","Yumna Q","Zilfara A"],
+  jadwal:["Senin: B.jawa, MTK, IPA F, Fiqih","Selasa: PPKN, MTK, SBDP, IPA B","Rabu: AA, B.Arab, B.Ingg, IPA B, Tahfidz","Kamis: B.indo, TIK, QH, Prakarya, B.Arab","Jumat: B.Ingg, Pjok, B.indo","Sabtu: Ski, B.indo, IPS, P5"],
+  piket:["Senin: Afifah, Geby, Zilfara, Lintar, Fauzan","Selasa: Amara, Jinaan, Bukhori, Rosi, Faiz","Rabu: Amira, Nusaibah, Hanan, Hijri, Raka A","Kamis: Avida, Senja, Angga, Impron, Ulil","Jumat: Bety, Uswatun, Irsyad, Novinza, Bayu","Sabtu: Cherry, Yumna, Wafa, Raka R, Fahri"],
+  struktur:["Ketua: Afifah","Wakil: Amira","Bendahara: Amara, Bety","Sekretaris: Yumna, Sanah"]
+};
+
+// Popup functions
+function openPopup(type){
+  document.querySelectorAll('.popup').forEach(p=>p.classList.remove('active'));
+  document.getElementById(`popup-${type}`).classList.add('active');overlay.classList.add('active');
+  let list=document.getElementById(`list-${type}`);
+  if(list){list.innerHTML='';data[type].forEach((d,i)=>list.innerHTML+=`<li>${type!=="struktur"?i+1+". ":''}${d}</li>`);}
+}
+function closePopup(type){document.getElementById(`popup-${type}`)?.classList.remove('active');overlay.classList.remove('active');}
+
+// Editor
+function openEditor(){let email=prompt("Email admin:"),pass=prompt("Password:");if(email==="admin"&&pass==="123"){editorPopup.classList.add("active");overlay.classList.add("active");document.getElementById("editorArea").value=JSON.stringify(data,null,2);}else{alert("Salah!");}}
+function closeEditor(){editorPopup.classList.remove("active");overlay.classList.remove("active");}
+function saveEditor(){try{data=JSON.parse(document.getElementById("editorArea").value);alert("Data tersimpan!");closeEditor();}catch(e){alert("Format salah!");}}
+
+// Logout
+function logout(){alert("Logout berhasil!");location.reload();}
+
+// Gelembung
+function createBubble(){
+  if(document.body.classList.contains("blocked")) return;
+  let bubble=document.createElement("div");
+  bubble.classList.add("bubble");
+  bubble.style.left=Math.random()*100+"%";
+  bubble.style.width=bubble.style.height=10+Math.random()*20+"px";
+  bubble.addEventListener("click",()=>{bubble.remove();});
+  document.body.appendChild(bubble);
+  setTimeout(()=>{bubble.remove();},6000);
+}
+setInterval(createBubble,500);
+
+// Sistem blokir
+let loginAttempts=0;
+function ownerLogin(email,pass){
+  if(localStorage.getItem("blocked") && new Date().getTime() < localStorage.getItem("blocked")){
+    blockScreen();return false;
+  }
+  if(email==="Own@TTR.com" && pass==="L1k"){
+    loginAttempts=0;
+    return true;
+  }else{
+    loginAttempts++;
+    if(loginAttempts>=3){
+      let unblockTime=new Date().getTime()+10*60*1000; 
+      localStorage.setItem("blocked",unblockTime);
+      blockScreen();
+    }else{alert("Email atau password salah!");}
+    return false;
+  }
+}
+function blockScreen(){
+  document.body.classList.add("blocked");
+  document.body.innerHTML="<h1 style='color:red;font-size:24px;text-align:center;margin-top:50vh;transform:translateY(-50%);'>ANDA DI BLOKIR SELAMA 10 MENIT</h1>";
+}
+
+// Unblock owner via console
+window.unblockOwner=()=>{localStorage.removeItem("blocked");alert("Owner bisa login kembali!");location.reload();};
+
+// Day real-time WIB
+function showDay(){
+  const dayNames=["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+  const now=new Date(new Date().toLocaleString("en-US",{timeZone:"Asia/Jakarta"}));
+  document.querySelector(".cards .card:last-child").textContent="📅 "+dayNames[now.getDay()];
+}
+setInterval(showDay,1000);
+showDay();
+
+// Server control
+let serverOn=true;
+function openServer(){document.getElementById("popup-server").classList.add("active");overlay.classList.add("active");document.getElementById("serverStatus").textContent="Server is "+(serverOn?"ON":"OFF");}
+function toggleServer(){
+  let email=document.getElementById("serverEmail").value;
+  let pass=document.getElementById("serverPass").value;
+  if(email==="Own@Cloud.com" && pass==="230311"){serverOn=!serverOn;document.getElementById("serverStatus").textContent="Server is "+(serverOn?"ON":"OFF");alert("Server berhasil "+(serverOn?"dihidupkan":"dimatikan"));}else{alert("Email/password salah!");}
+}
+</script>
+</body>
+</html>
