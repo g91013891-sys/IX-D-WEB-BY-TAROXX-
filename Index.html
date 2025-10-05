@@ -3,227 +3,550 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Web Kelas IX-D Final</title>
+<title>Web Kelas IX-D</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif;}
-body{background:#0f172a;color:#fff;overflow:hidden;position:relative;height:100vh;font-size:14px;transition:0.5s;}
-/* Sidebar */
-.sidebar{
-  position:fixed;top:0;left:0;width:250px;height:100%;background:#1e293b;padding:15px;
-  transform:translateX(-100%);transition:0.4s;z-index:1000;border-top-right-radius:15px;border-bottom-right-radius:15px;
-}
-.sidebar.active{transform:translateX(0);}
-.sidebar-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;}
-.sidebar-header .close-sidebar{cursor:pointer;font-size:22px;color:#ef4444;}
-.sidebar ul{list-style:none;display:flex;flex-direction:column;gap:12px;}
-.sidebar ul li a{color:#fff;text-decoration:none;padding:8px 10px;border-radius:8px;display:block;background:rgba(255,255,255,0.05);}
-.sidebar ul li a:hover{background:#22d3ee;color:#000;}
+/* ===== BODY ===== */
+body{margin:0;padding:0;font-family:'Poppins',sans-serif;background:#0f172a;color:#fff;overflow-x:hidden;position:relative;}
+h1,h2,h3,h4,h5,h6{margin:0;padding:0;}
+button,input,textarea{outline:none;font-family:inherit;}
 
-/* Overlay */
-.overlay{
-  position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:none;z-index:900;
-}
-.overlay.active{display:block;}
+/* ===== LOGIN ===== */
+#loginPage{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;gap:10px;}
+#loginPage input{padding:10px;width:200px;border-radius:5px;border:none;background:#1e293b;color:#fff;}
+#loginPage button{padding:10px 20px;border:none;border-radius:5px;background:linear-gradient(90deg,#22d3ee,#a855f7);color:#000;font-weight:bold;cursor:pointer;transition:0.3s;}
+#loginPage button:hover{background:linear-gradient(90deg,#a855f7,#22d3ee);color:#fff;}
+.block-msg{color:red;font-size:16px;margin-top:10px;text-align:center;}
 
-/* Dashboard */
-.dashboard{padding:15px;text-align:center;margin-left:0;}
-.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:15px;}
-.card{
-  background:#1e293b;padding:15px;border-radius:15px;text-align:center;
-  box-shadow:0 0 10px rgba(34,211,238,0.7);transition:0.3s;cursor:pointer;
+/* ===== DASHBOARD ===== */
+.dashboard{display:none;padding:15px;margin-left:0;min-height:100vh;position:relative;}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px;}
+.card{padding:15px;border-radius:15px;text-align:center;cursor:pointer;position:relative;overflow:hidden;min-height:120px;display:flex;flex-direction:column;justify-content:center;align-items:center;background:rgb(30,41,59);border:1px solid rgba(255,255,255,0.1);transition:0.3s;}
+.card:hover{transform:scale(1.05);box-shadow:0 0 10px #22d3ee,0 0 20px #facc15;}
+.card-icon{font-size:28px;margin-bottom:8px;background:linear-gradient(135deg,#22d3ee,#facc15,#a855f7);-webkit-background-clip:text;color:transparent;}
+.card-title{font-size:13px;color:#cbd5e1;margin-bottom:5px;}
+.card-value{font-size:22px;font-weight:bold;background:linear-gradient(135deg,#22d3ee,#facc15,#a855f7);-webkit-background-clip:text;color:transparent;}
+.neon-click{animation:neonFlash 1s infinite alternate;}
+@keyframes neonFlash{
+0%{text-shadow:0 0 5px #22d3ee,0 0 10px #facc15,0 0 20px #a855f7;}
+100%{text-shadow:0 0 10px #22d3ee,0 0 20px #facc15,0 0 30px #a855f7;}
 }
-.card:active{box-shadow:0 0 20px #22d3ee,0 0 30px #facc15,0 0 40px #a855f7;}
 
-/* Planet Saturnus */
-.planet{
-  width:80px;height:80px;border-radius:50%;
-  background:radial-gradient(circle at 30% 30%,#facc15,#eab308);margin:12px auto;
-  position:relative;animation:spin 8s linear infinite;
-}
-.planet::after{
-  content:"";position:absolute;top:50%;left:-20px;width:120px;height:10px;border:2px solid rgba(255,255,255,0.7);
-  border-radius:50%;transform:translateY(-50%) rotate(20deg);
-}
+/* ===== PLANET ===== */
+.planet{width:60px;height:60px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#facc15,#eab308);margin:10px auto;position:relative;animation:spin 8s linear infinite;}
+.planet::after{content:"";position:absolute;top:50%;left:-15px;width:90px;height:6px;border:2px solid rgba(255,255,255,0.7);border-radius:50%;transform:translateY(-50%) rotate(20deg);}
 @keyframes spin{0%{transform:rotate(0);}100%{transform:rotate(360deg);}}
 
-/* Popup */
-.popup{
-  position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
-  background:#111827;padding:15px;border-radius:15px;
-  width:90%;max-width:350px;max-height:70vh;overflow-y:auto;z-index:1100;display:none;
-  box-shadow:0 0 20px #22d3ee,0 0 30px #facc15,0 0 40px #a855f7;
-}
+/* ===== POPUP ===== */
+.popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#111827;padding:15px;border-radius:15px;width:90%;max-width:400px;max-height:80vh;overflow-y:auto;z-index:1100;display:none;box-shadow:0 0 15px #22d3ee,0 0 20px #facc15,0 0 30px #a855f7;border:2px solid transparent;background-clip: padding-box;background-image: linear-gradient(135deg,#111827,#1e293b), linear-gradient(135deg,#22d3ee,#facc15,#a855f7);background-origin:border-box;background-clip: padding-box, border-box;}
 .popup.active{display:block;}
-.popup .close-btn{float:right;cursor:pointer;color:#ef4444;font-size:20px;}
-.popup ul{list-style:none;margin-top:10px;padding-left:0;}
+.popup .close-btn{float:right;cursor:pointer;color:#ef4444;font-size:20px;transition:transform 0.3s;}
+.popup .close-btn:hover{transform:scale(1.2);}
+.popup h2{text-align:center;margin-bottom:12px;font-size:18px;background:linear-gradient(90deg,#22d3ee,#facc15,#a855f7);-webkit-background-clip:text;color:transparent;font-weight:bold;text-shadow:0 2px 3px rgba(0,0,0,0.3);}
+.list-container{margin-top:12px;display:flex;flex-direction:column;gap:8px;}
+.list-item{background: rgba(255,255,255,0.05);padding:10px 12px;border-radius:10px;transition: all 0.3s;display:flex;align-items:center;font-size:13px;border-left:2px solid #22d3ee;}
+.list-item:hover{background: rgba(34,211,238,0.15);transform:translateX(5px);}
+.number-badge{display:inline-flex;align-items:center;justify-content:center;width:25px;height:25px;background:linear-gradient(135deg,#22d3ee,#a855f7);color:white;border-radius:5px;font-weight:bold;margin-right:8px;flex-shrink:0;font-size:12px;}
+.day-box{background: rgba(255,255,255,0.05);border-radius:10px;padding:10px;margin-bottom:5px;border:1px solid rgba(34,211,238,0.3);transition: all 0.3s;font-size:13px;}
+.day-box:hover{background: rgba(34,211,238,0.1);transform: translateY(-2px);box-shadow:0 4px 10px rgba(0,0,0,0.2);}
+.day-header{font-weight:bold;margin-bottom:4px;color:#facc15;display:flex;align-items:center;gap:4px;font-size:14px;}
+.day-header::before{content:"📌";}
+.day-content{padding-left:8px;border-left:2px dashed #a855f7;margin-left:4px;}
 
-/* Gelembung */
-.bubble{
-  position:absolute;bottom:0;width:20px;height:20px;background:rgba(34,211,238,0.7);border-radius:50%;
-  animation:rise 6s linear infinite;cursor:pointer;
+/* ===== SIDEBAR ===== */
+.menu-btn{position:absolute;top:10px;left:10px;font-size:24px;cursor:pointer;z-index:1200;color:#22d3ee;display:none;}
+.sidebar{position:fixed;top:0;left:0;width:240px;height:100%;background:#1e293b;padding:15px;transform:translateX(-100%);transition:0.4s;z-index:1000;border-top-right-radius:20px;border-bottom-right-radius:20px;}
+.sidebar.active{transform:translateX(0);}
+.sidebar-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;}
+.sidebar-header .close-sidebar{cursor:pointer;font-size:24px;color:#ef4444;}
+.sidebar ul{list-style:none;display:flex;flex-direction:column;gap:10px;}
+.sidebar ul li a{color:#fff;text-decoration:none;padding:10px;border-radius:8px;display:block;background:rgba(255,255,255,0.05);}
+.sidebar ul li a:hover{background:#22d3ee;color:#000;}
+
+/* ===== OVERLAY ===== */
+.overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:none;z-index:900;}
+.overlay.active{display:block;}
+
+/* ===== WELCOME RGB ===== */
+@keyframes rgbText{
+0%{color:red;}
+25%{color:#22d3ee;}
+50%{color:#facc15;}
+75%{color:#a855f7;}
+100%{color:red;}
 }
-@keyframes rise{0%{transform:translateY(0);}100%{transform:translateY(-100vh);}}
+.neon-welcome{font-weight:bold;font-size:24px;text-align:center;animation:rgbText 2s infinite;}
 
-/* Welcome */
-h1{font-size:18px;background:linear-gradient(90deg,#22d3ee,#facc15,#a855f7);-webkit-background-clip:text;color:transparent;margin:10px 0;}
+/* ===== FOOTER ===== */
+footer{position:relative;text-align:center;padding:10px;background:#111827;margin-top:20px;color:#fff;font-size:13px;border-top:1px solid #22d3ee;}
 
-/* Scroll popup */
-.popup::-webkit-scrollbar{width:6px;}
-.popup::-webkit-scrollbar-thumb{background:#22d3ee;border-radius:3px;}
-.popup::-webkit-scrollbar-track{background:#111827;}
+/* ===== API PANEL (HIDDEN) ===== */
+.api-panel {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    background: rgba(30, 41, 59, 0.9);
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #22d3ee;
+    font-size: 12px;
+    max-width: 300px;
+    display: none;
+    z-index: 1000;
+}
+.api-key-display {
+    background: #1e293b;
+    color: #22d3ee;
+    padding: 8px;
+    border-radius: 4px;
+    font-family: monospace;
+    word-break: break-all;
+    margin: 5px 0;
+    font-size: 11px;
+}
 </style>
 </head>
 <body>
 
-<div class="menu-btn" style="position:absolute;top:10px;left:10px;font-size:24px;cursor:pointer;">&#9776;</div>
+<!-- ===== LOGIN PAGE ===== -->
+<div id="loginPage">
+  <h1>Login Owner</h1>
+  <input type="text" id="email" placeholder="Email">
+  <input type="password" id="password" placeholder="Password">
+  <button onclick="login()">Login</button>
+  <label style="color:#fff;margin-top:10px;">
+    Owner Unblock <input type="checkbox" id="ownerToggle" onclick="toggleOwnerUnblock()">
+  </label>
+  <div id="ownerUnblockDiv" style="display:none;margin-top:5px;">
+    <input type="password" id="ownerPassword" placeholder="masukan password">
+    <button onclick="ownerUnblock()">Unblock</button>
+  </div>
+  <div id="message" class="block-msg"></div>
+</div>
 
+<!-- ===== DASHBOARD ===== -->
+<div class="menu-btn">&#9776;</div>
 <div class="sidebar" id="sidebar">
   <div class="sidebar-header">
-    <span>Menu</span>
+    <span></span>
     <span class="close-sidebar" onclick="closeSidebar()">❌</span>
   </div>
   <ul>
-    <li><a onclick="openPopup('siswa')">Data Siswa</a></li>
-    <li><a onclick="openPopup('jadwal')">Jadwal Pelajaran</a></li>
-    <li><a onclick="openPopup('piket')">Piket Kelas</a></li>
-    <li><a onclick="openPopup('struktur')">Struktur Kelas</a></li>
-    <li><a onclick="openServer()">Server</a></li>
-    <li><a onclick="openEditor()">Edit Konten</a></li>
-    <li><a onclick="logout()">Logout</a></li>
+    <li><a onclick="openPopup('siswa')">👥 Data Siswa</a></li>
+    <li><a onclick="openPopup('jadwal')">📅 Jadwal Pelajaran</a></li>
+    <li><a onclick="openPopup('struktur')">🏛️ Struktur Kelas</a></li>
+    <li><a onclick="openPopup('piket')">🔔 Piket Kelas</a></li>
+    <li><a onclick="showApiPanel()">🔑 API Key</a></li>
+    <li><a onclick="logout()">🚪 Logout</a></li>
   </ul>
 </div>
-
 <div class="overlay" id="overlay" onclick="closeAll()"></div>
 
 <div class="dashboard">
   <div class="planet"></div>
-  <h1>Selamat Datang di Web Kelas IX-D</h1>
+  <h1 class="neon-welcome">Selamat Datang di Web Kelas IX-D</h1>
   <div class="cards">
-    <div class="card">👥 Total Siswa</div>
-    <div class="card">📚 Mata Pelajaran</div>
-    <div class="card">🔔 Piket Kelas</div>
-    <div class="card">📅 Hari Ini</div>
+    <div class="card" onclick="flashNeon(this)">
+      <div class="card-icon">👥</div>
+      <div class="card-title">Total Siswa</div>
+      <div class="card-value" id="total-siswa"></div>
+    </div>
+    <div class="card" onclick="flashNeon(this)">
+      <div class="card-icon">📚</div>
+      <div class="card-title">Mata Pelajaran</div>
+      <div class="card-value" id="total-mapel"></div>
+    </div>
+    <div class="card" onclick="flashNeon(this)">
+      <div class="card-icon">📅</div>
+      <div class="card-title">Hari Ini</div>
+      <div class="card-value" id="hari-ini"></div>
+    </div>
+    <div class="card" onclick="flashNeon(this)">
+      <div class="card-icon">🔔</div>
+      <div class="card-title">Piket Kelas</div>
+      <div class="card-value" id="total-piket"></div>
+    </div>
   </div>
 </div>
 
-<!-- Popups -->
-<div id="popup-siswa" class="popup"><span class="close-btn" onclick="closePopup('siswa')">&times;</span><h2>Data Siswa</h2><ul id="list-siswa"></ul></div>
-<div id="popup-jadwal" class="popup"><span class="close-btn" onclick="closePopup('jadwal')">&times;</span><h2>Jadwal</h2><ul id="list-jadwal"></ul></div>
-<div id="popup-piket" class="popup"><span class="close-btn" onclick="closePopup('piket')">&times;</span><h2>Piket</h2><ul id="list-piket"></ul></div>
-<div id="popup-struktur" class="popup"><span class="close-btn" onclick="closePopup('struktur')">&times;</span><h2>Struktur Kelas</h2><ul id="list-struktur"></ul></div>
-
-<!-- Server -->
-<div id="popup-server" class="popup">
-  <span class="close-btn" onclick="closePopup('server')">&times;</span>
-  <h2>Server Control</h2>
-  <p>Masukkan email & password admin untuk ON/OFF server</p>
-  <input type="text" id="serverEmail" placeholder="Email">
-  <input type="password" id="serverPass" placeholder="Password">
-  <button onclick="toggleServer()">ON/OFF</button>
-  <p id="serverStatus"></p>
+<!-- ===== POPUPS ===== -->
+<div id="popup-siswa" class="popup">
+  <span class="close-btn" onclick="closePopup('siswa')">&times;</span>
+  <h2>👥 Data Siswa</h2>
+  <div class="list-container" id="list-siswa"></div>
+</div>
+<div id="popup-jadwal" class="popup">
+  <span class="close-btn" onclick="closePopup('jadwal')">&times;</span>
+  <h2>📅 Jadwal Pelajaran</h2>
+  <div class="list-container" id="list-jadwal"></div>
+</div>
+<div id="popup-struktur" class="popup">
+  <span class="close-btn" onclick="closePopup('struktur')">&times;</span>
+  <h2>🏛️ Struktur Kelas</h2>
+  <div class="list-container" id="list-struktur"></div>
+</div>
+<div id="popup-piket" class="popup">
+  <span class="close-btn" onclick="closePopup('piket')">&times;</span>
+  <h2>🔔 Piket Kelas</h2>
+  <div class="list-container" id="list-piket"></div>
 </div>
 
-<!-- Editor -->
-<div id="editorPopup" class="popup">
-  <span class="close-btn" onclick="closeEditor()">&times;</span>
-  <h2>Edit Konten Admin</h2>
-  <textarea id="editorArea"></textarea>
-  <button onclick="saveEditor()">Simpan</button>
+<!-- ===== API PANEL ===== -->
+<div id="apiPanel" class="api-panel">
+  <h4 style="margin:0 0 8px 0;color:#22d3ee;">🔑 API Key System</h4>
+  <div class="api-key-display" id="currentApiKey">Loading...</div>
+  <div style="font-size:10px;color:#94a3b8;margin-bottom:8px;">
+    Gunakan API key ini untuk monitoring external
+  </div>
+  <button onclick="refreshApiKey()" style="padding:5px 10px;font-size:10px;background:#22d3ee;border:none;border-radius:4px;cursor:pointer;">Refresh Key</button>
+  <button onclick="hideApiPanel()" style="padding:5px 10px;font-size:10px;background:#ef4444;border:none;border-radius:4px;cursor:pointer;margin-left:5px;">Tutup</button>
 </div>
+
+<footer>
+&copy; 2025 Web Kelas IX-D | All rights reserved
+</footer>
 
 <script>
-// Sidebar toggle
-const sidebar = document.getElementById('sidebar');
-const overlay = document.getElementById('overlay');
-const editorPopup=document.getElementById('editorPopup');
-document.querySelector('.menu-btn').addEventListener('click',()=>{
-  sidebar.classList.add('active');overlay.classList.add('active');
-});
-function closeSidebar(){sidebar.classList.remove('active');overlay.classList.remove('active');}
-function closeAll(){closeSidebar();document.querySelectorAll('.popup').forEach(p=>p.classList.remove('active'));}
-
-// Data
-let data={
+// ==== DATA ====
+let data = {
   siswa:["Afifah F","Ahmad Bukhori","Ahmad Hanan M","Amara Putri A","Amira Putri A","Angga Wijayanto","Avida A","Bayu Kurniawan","Bety Nur Cahyani","Cherry A","Fahri Zaidan A","Fauzan Cahyo G","Geby Cinta H","Hibatullah R","Hijri Aza M","Impron Atma W","Irsyad Ali M","Itmamul Wafa","Jinaan M","Lintar K","M Faiz F","M Raka A","M Ulil F","Novinza Risky S","Nusaibah A","Raka Restu S","Senja Alya A","Uswatun K","Yumna Q","Zilfara A"],
-  jadwal:["Senin: B.jawa, MTK, IPA F, Fiqih","Selasa: PPKN, MTK, SBDP, IPA B","Rabu: AA, B.Arab, B.Ingg, IPA B, Tahfidz","Kamis: B.indo, TIK, QH, Prakarya, B.Arab","Jumat: B.Ingg, Pjok, B.indo","Sabtu: Ski, B.indo, IPS, P5"],
-  piket:["Senin: Afifah, Geby, Zilfara, Lintar, Fauzan","Selasa: Amara, Jinaan, Bukhori, Rosi, Faiz","Rabu: Amira, Nusaibah, Hanan, Hijri, Raka A","Kamis: Avida, Senja, Angga, Impron, Ulil","Jumat: Bety, Uswatun, Irsyad, Novinza, Bayu","Sabtu: Cherry, Yumna, Wafa, Raka R, Fahri"],
+  jadwal:{
+    "Senin":["B.jawa","MTK","IPA F","Fiqih"],
+    "Selasa":["PPKN","MTK","SBDP","IPA B"],
+    "Rabu":["AA","B.Arab","B.Ingg","IPA B","Tahfidz"],
+    "Kamis":["B.indo","TIK","QH","Prakarya","B.Arab"],
+    "Jumat":["B.Ingg","Pjok","B.indo"],
+    "Sabtu":["Ski","B.indo","IPS","P5"]
+  },
+  piket:{
+    "Senin":["Afifah","Geby","Zilfara","Lintar","Fauzan"],
+    "Selasa":["Amara","Jinaan","Bukhori","Rosi","Faiz"],
+    "Rabu":["Amira","Nusaibah","Hanan","Hijri","Raka A"],
+    "Kamis":["Avida","Senja","Angga","Impron","Ulil"],
+    "Jumat":["Bety","Uswatun","Irsyad","Novinza","Bayu"],
+    "Sabtu":["Cherry","Yumna","Wafa","Raka R","Fahri"]
+  },
   struktur:["Ketua: Afifah","Wakil: Amira","Bendahara: Amara, Bety","Sekretaris: Yumna, Sanah"]
 };
 
-// Popup functions
+// ==== API KEY SYSTEM ====
+let apiKey = localStorage.getItem('class9d_api_key');
+if (!apiKey) {
+    apiKey = generateApiKey();
+    localStorage.setItem('class9d_api_key', apiKey);
+}
+
+function generateApiKey() {
+    const timestamp = Date.now().toString(36);
+    const random = Math.random().toString(36).substr(2, 9);
+    return `class9d_${timestamp}_${random}`;
+}
+
+function refreshApiKey() {
+    apiKey = generateApiKey();
+    localStorage.setItem('class9d_api_key', apiKey);
+    document.getElementById('currentApiKey').textContent = apiKey;
+    alert('API Key telah diperbarui!');
+}
+
+function showApiPanel() {
+    document.getElementById('apiPanel').style.display = 'block';
+    document.getElementById('currentApiKey').textContent = apiKey;
+    closeAll();
+}
+
+function hideApiPanel() {
+    document.getElementById('apiPanel').style.display = 'none';
+}
+
+// ==== API ENDPOINTS ====
+window.Class9DAPI = {
+    // Get website status
+    getStatus: function(providedApiKey) {
+        if (providedApiKey !== apiKey) {
+            return {
+                success: false,
+                error: 'Invalid API Key',
+                timestamp: new Date().toISOString()
+            };
+        }
+
+        return {
+            success: true,
+            data: {
+                status: 'online',
+                totalStudents: data.siswa.length,
+                totalSubjects: hitungMapel(),
+                currentDay: getCurrentDayName(),
+                serverTime: new Date().toISOString(),
+                uptime: Math.floor(performance.now() / 1000)
+            },
+            timestamp: new Date().toISOString()
+        };
+    },
+
+    // Get all data
+    getData: function(providedApiKey, dataType) {
+        if (providedApiKey !== apiKey) {
+            return {
+                success: false,
+                error: 'Invalid API Key',
+                timestamp: new Date().toISOString()
+            };
+        }
+
+        const validTypes = ['siswa', 'jadwal', 'piket', 'struktur'];
+        if (!validTypes.includes(dataType)) {
+            return {
+                success: false,
+                error: 'Invalid data type',
+                timestamp: new Date().toISOString()
+            };
+        }
+
+        return {
+            success: true,
+            data: data[dataType],
+            timestamp: new Date().toISOString()
+        };
+    },
+
+    // Get metrics
+    getMetrics: function(providedApiKey) {
+        if (providedApiKey !== apiKey) {
+            return {
+                success: false,
+                error: 'Invalid API Key',
+                timestamp: new Date().toISOString()
+            };
+        }
+
+        return {
+            success: true,
+            data: {
+                memoryUsage: Math.floor(Math.random() * 30 + 50), // simulated
+                responseTime: Math.floor(Math.random() * 50 + 20), // simulated
+                activeConnections: Math.floor(Math.random() * 10 + 1), // simulated
+                lastUpdate: new Date().toISOString()
+            },
+            timestamp: new Date().toISOString()
+        };
+    }
+};
+
+// Helper function untuk mendapatkan nama hari
+function getCurrentDayName() {
+    const dayNames = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+    const now = new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Jakarta"}));
+    return dayNames[now.getDay()];
+}
+
+// Hitung mapel unik
+function hitungMapel(){
+  const semuaMapel=[];
+  for(let hari in data.jadwal){
+    data.jadwal[hari].forEach(mapel=>{
+      if(!semuaMapel.includes(mapel.trim())) semuaMapel.push(mapel.trim());
+    });
+  }
+  return semuaMapel.length;
+}
+
+// Update card
+document.getElementById('total-siswa').textContent = data.siswa.length;
+document.getElementById('total-mapel').textContent = hitungMapel();
+document.getElementById('total-piket').textContent = 6;
+
+// Popup
 function openPopup(type){
   document.querySelectorAll('.popup').forEach(p=>p.classList.remove('active'));
-  document.getElementById(`popup-${type}`).classList.add('active');overlay.classList.add('active');
-  let list=document.getElementById(`list-${type}`);
-  if(list){list.innerHTML='';data[type].forEach((d,i)=>list.innerHTML+=`<li>${type!=="struktur"?i+1+". ":''}${d}</li>`);}
+  document.getElementById(`popup-${type}`).classList.add('active');
+  document.getElementById('overlay').classList.add('active');
+  const container=document.getElementById(`list-${type}`);
+  if(!container) return;
+  container.innerHTML="";
+  if(type==="siswa"){
+    data.siswa.forEach((d,i)=>{
+      const item=document.createElement('div');item.className='list-item';
+      const badge=document.createElement('span');badge.className='number-badge';badge.textContent=i+1;
+      item.appendChild(badge);
+      item.appendChild(document.createTextNode(d));
+      container.appendChild(item);
+    });
+  } else if(type==="jadwal"){
+    for(let hari in data.jadwal){
+      const box=document.createElement('div');box.className='day-box';
+      const header=document.createElement('div');header.className='day-header';header.textContent=hari;
+      const content=document.createElement('div');content.className='day-content';content.textContent=data.jadwal[hari].join(", ");
+      box.appendChild(header);box.appendChild(content);container.appendChild(box);
+    }
+  } else if(type==="struktur"){
+    data.struktur.forEach(d=>{
+      const item=document.createElement('div');item.className='list-item';item.textContent=d;
+      container.appendChild(item);
+    });
+  } else if(type==="piket"){
+    for(let hari in data.piket){
+      const box=document.createElement('div');box.className='day-box';
+      const header=document.createElement('div');header.className='day-header';header.textContent=hari;
+      const content=document.createElement('div');content.className='day-content';content.textContent=data.piket[hari].join(", ");
+      box.appendChild(header);box.appendChild(content);container.appendChild(box);
+    }
+  }
 }
-function closePopup(type){document.getElementById(`popup-${type}`)?.classList.remove('active');overlay.classList.remove('active');}
+function closePopup(type){
+  document.getElementById(`popup-${type}`).classList.remove('active');
+  document.getElementById('overlay').classList.remove('active');
+}
+function closeAll(){
+  document.getElementById('sidebar').classList.remove('active');
+  document.getElementById('overlay').classList.remove('active');
+  document.querySelectorAll('.popup').forEach(p=>p.classList.remove('active'));
+}
+function closeSidebar(){closeAll();}
 
-// Editor
-function openEditor(){let email=prompt("Email admin:"),pass=prompt("Password:");if(email==="admin"&&pass==="123"){editorPopup.classList.add("active");overlay.classList.add("active");document.getElementById("editorArea").value=JSON.stringify(data,null,2);}else{alert("Salah!");}}
-function closeEditor(){editorPopup.classList.remove("active");overlay.classList.remove("active");}
-function saveEditor(){try{data=JSON.parse(document.getElementById("editorArea").value);alert("Data tersimpan!");closeEditor();}catch(e){alert("Format salah!");}}
+// Sidebar toggle
+document.querySelector('.menu-btn').addEventListener('click',()=>{
+  document.getElementById('sidebar').classList.add('active');
+  document.getElementById('overlay').classList.add('active');
+});
 
 // Logout
-function logout(){alert("Logout berhasil!");location.reload();}
-
-// Gelembung
-function createBubble(){
-  if(document.body.classList.contains("blocked")) return;
-  let bubble=document.createElement("div");
-  bubble.classList.add("bubble");
-  bubble.style.left=Math.random()*100+"%";
-  bubble.style.width=bubble.style.height=10+Math.random()*20+"px";
-  bubble.addEventListener("click",()=>{bubble.remove();});
-  document.body.appendChild(bubble);
-  setTimeout(()=>{bubble.remove();},6000);
-}
-setInterval(createBubble,500);
-
-// Sistem blokir
-let loginAttempts=0;
-function ownerLogin(email,pass){
-  if(localStorage.getItem("blocked") && new Date().getTime() < localStorage.getItem("blocked")){
-    blockScreen();return false;
-  }
-  if(email==="Own@TTR.com" && pass==="L1k"){
-    loginAttempts=0;
-    return true;
-  }else{
-    loginAttempts++;
-    if(loginAttempts>=3){
-      let unblockTime=new Date().getTime()+10*60*1000; 
-      localStorage.setItem("blocked",unblockTime);
-      blockScreen();
-    }else{alert("Email atau password salah!");}
-    return false;
-  }
-}
-function blockScreen(){
-  document.body.classList.add("blocked");
-  document.body.innerHTML="<h1 style='color:red;font-size:24px;text-align:center;margin-top:50vh;transform:translateY(-50%);'>ANDA DI BLOKIR SELAMA 10 MENIT</h1>";
+function logout(){
+  localStorage.removeItem('isLoggedIn');
+  alert("Logout berhasil!");
+  location.reload();
 }
 
-// Unblock owner via console
-window.unblockOwner=()=>{localStorage.removeItem("blocked");alert("Owner bisa login kembali!");location.reload();};
-
-// Day real-time WIB
+// ===== HARI REAL TIME =====
 function showDay(){
   const dayNames=["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
   const now=new Date(new Date().toLocaleString("en-US",{timeZone:"Asia/Jakarta"}));
-  document.querySelector(".cards .card:last-child").textContent="📅 "+dayNames[now.getDay()];
+  document.getElementById("hari-ini").textContent=dayNames[now.getDay()];
 }
 setInterval(showDay,1000);
 showDay();
 
-// Server control
-let serverOn=true;
-function openServer(){document.getElementById("popup-server").classList.add("active");overlay.classList.add("active");document.getElementById("serverStatus").textContent="Server is "+(serverOn?"ON":"OFF");}
-function toggleServer(){
-  let email=document.getElementById("serverEmail").value;
-  let pass=document.getElementById("serverPass").value;
-  if(email==="Own@Cloud.com" && pass==="230311"){serverOn=!serverOn;document.getElementById("serverStatus").textContent="Server is "+(serverOn?"ON":"OFF");alert("Server berhasil "+(serverOn?"dihidupkan":"dimatikan"));}else{alert("Email/password salah!");}
+// ==== LOGIN & BLOKIR ====
+let loginAttempts=0;
+const BLOCK_TIME=60*60*1000; // 1 jam
+const OWNER_EMAIL="own@exa.com";
+const OWNER_PASS="230311";
+
+// CEK LOGIN SEBELUMNYA
+window.onload=()=>{
+  if(localStorage.getItem('isLoggedIn')==='true'){
+    document.getElementById("loginPage").style.display="none";
+    document.querySelector(".dashboard").style.display="block";
+    document.querySelector(".menu-btn").style.display="block";
+  } else {
+    const blockedUntil=parseInt(localStorage.getItem("blockedUntil"))||0;
+    if(blockedUntil>new Date().getTime()) showBlockTime(blockedUntil-new Date().getTime());
+  }
 }
+
+function login(){
+  const email=document.getElementById("email").value;
+  const pass=document.getElementById("password").value;
+  const now=new Date().getTime();
+  const blockedUntil=parseInt(localStorage.getItem("blockedUntil"))||0;
+  if(blockedUntil>now){showBlockTime(blockedUntil-now);return;}
+  if(email===OWNER_EMAIL && pass===OWNER_PASS){
+    loginAttempts=0;
+    localStorage.removeItem("blockedUntil");
+    localStorage.setItem('isLoggedIn','true');
+    document.getElementById("loginPage").style.display="none";
+    document.querySelector(".dashboard").style.display="block";
+    document.querySelector(".menu-btn").style.display="block";
+  } else {
+    loginAttempts++;
+    if(loginAttempts>=3){
+      const unblockTime=now+BLOCK_TIME;
+      localStorage.setItem("blockedUntil",unblockTime);
+      showBlockTime(BLOCK_TIME);
+    } else {
+      document.getElementById("message").textContent=`Email/password salah! Percobaan: ${loginAttempts}/3`;
+       }
+  }
+}
+
+let countdownInterval;
+function showBlockTime(ms){
+  clearInterval(countdownInterval);
+  const msg=document.getElementById("message");
+  countdownInterval=setInterval(()=>{
+    const now=new Date().getTime();
+    let remaining=parseInt(localStorage.getItem("blockedUntil"))-now;
+    if(remaining<=0){
+      clearInterval(countdownInterval);
+      msg.textContent="Anda bisa mencoba login lagi!";
+      localStorage.removeItem("blockedUntil");
+      loginAttempts=0;
+    } else {
+      const m=Math.floor(remaining/60000);
+      const s=Math.floor((remaining%60000)/1000);
+      msg.textContent=`Anda diblokir! Sisa waktu: ${m}m ${s}s`;
+    }
+  },1000);
+}
+
+// OWNER UNBLOCK TOGGLE
+function toggleOwnerUnblock(){
+  const toggle=document.getElementById('ownerToggle');
+  document.getElementById('ownerUnblockDiv').style.display=toggle.checked?'block':'none';
+}
+
+// OWNER UNBLOCK CEPAT (HANYA PASSWORD)
+function ownerUnblock(){
+  const key=document.getElementById('ownerPassword').value;
+  if(key==="F1F4"){
+    localStorage.removeItem("blockedUntil");
+    loginAttempts=0;
+    document.getElementById("message").textContent="Owner berhasil unblock! 🔓";
+    clearInterval(countdownInterval);
+  } else alert("Password salah!");
+}
+
+// CARD NEON EFFECT
+function flashNeon(el){
+  el.classList.add('neon-click');
+  setTimeout(()=>el.classList.remove('neon-click'),1500);
+}
+
+// ===== DAUN JATUH =====
+const leavesCount=25;
+for(let i=0;i<leavesCount;i++){
+  const leaf=document.createElement('div');
+  leaf.textContent='🍂';
+  leaf.style.position='fixed';
+  leaf.style.top=Math.random()*-200+'px';
+  leaf.style.left=Math.random()*window.innerWidth+'px';
+  leaf.style.fontSize=(17+Math.random()*20)+'px';
+  leaf.style.zIndex='0';
+  leaf.style.opacity=Math.random();
+  leaf.style.pointerEvents='none';
+  leaf.style.transition='top 0.1s linear';
+  document.body.appendChild(leaf);
+  fallLeaf(leaf);
+}
+function fallLeaf(leaf){
+  let top=parseFloat(leaf.style.top);
+  let left=parseFloat(leaf.style.left);
+  const speed=1+Math.random()*2;
+  function animate(){
+    top+=speed;
+    left+=Math.sin(top/50)*2;
+    if(top>window.innerHeight){top=-50;left=Math.random()*window.innerWidth;}
+    leaf.style.top=top+'px';
+    leaf.style.left=left+'px';
+    requestAnimationFrame(animate);
+  }
+  animate();
+}
+
+// Auto-hide API panel after 30 seconds
+setTimeout(() => {
+    hideApiPanel();
+}, 30000);
 </script>
 </body>
 </html>
